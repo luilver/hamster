@@ -294,10 +294,10 @@ class CustomFactController(gtk.Object):
 
             self.close_window()
 
-        elif event_key.keyval in (gtk.keysyms.Return, gtk.keysyms.KP_Enter):
-            if popups:
+        elif event_key.keyval in (gtk.keysyms.Return, gtk.keysyms.KP_Enter) and self.get_widget("save_button").is_sensitive():
+            if popups and not(event_key.state & gtk.gdk.CONTROL_MASK):
                 return False
-            if self.get_widget('description').has_focus():
+            if self.get_widget('description').has_focus() and not(event_key.state & gtk.gdk.CONTROL_MASK):
                 return False
             self.on_save_button_clicked(None)
 
