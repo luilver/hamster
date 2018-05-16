@@ -173,14 +173,18 @@ class ExporterController(gtk.Object):
             grouped_rows[issue_id] = list(rows)
         for issue_id in grouped_rows.keys():
             # ściągnąć nazwę ticketa
+            row_data = None
             if self.source == SOURCE_RT:
                 row_data = runtime.get_external().rt.get_ticket(issue_id)
             elif self.source == SOURCE_REDMINE:
                 issue = runtime.get_external().redmine.getIssue(issue_id)
                 row_data = {'id': issue.id, 'Subject': str(issue_id) + ': ' + issue.fields.summary}
-            elif self.source == SOURCE_JIRA:
-                issue = runtime.get_external().jira.issue(issue_id)
-                row_data = {'id': issue.key, 'Subject': issue.fields.summary}
+            elif self.source == SOURCE_JIRA and runtime.get_external().is_issue_from_existing_jira_project(issue_id):
+                try:
+                    issue = runtime.get_external().jira.issue(issue_id)
+                    row_data = {'id': issue.key, 'Subject': issue.fields.summary}
+                except:
+                    logging.error("Issue not found: %s" % (issue_id))
 
             if row_data:
                 parent = self.tree_store.append(None, (TicketRow(row_data),))

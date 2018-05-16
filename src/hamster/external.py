@@ -175,9 +175,10 @@ class ActivitiesSource(object):
             activities = self.__extract_from_jira(query, self.jira_query)
             direct_issue = None
             if query and re.match("^[a-zA-Z][a-zA-Z0-9]*-[0-9]+$", query):
-                issue = self.jira.issue(query.upper())
-                if issue:
-                    direct_issue = self.__extract_activity_from_jira_issue(issue)
+                if self.is_issue_from_existing_jira_project(query):
+                    issue = self.jira.issue(query.upper())
+                    if issue:
+                        direct_issue = self.__extract_activity_from_jira_issue(issue)
             if direct_issue and direct_issue not in activities:
                 activities.append(direct_issue)
             if len(activities) <= CURRENT_USER_ACTIVITIES_LIMIT and not direct_issue and len(query) >= MIN_QUERY_LENGTH:
@@ -380,6 +381,9 @@ class ActivitiesSource(object):
         except:
             pass
         return False
+
+    def is_issue_from_existing_jira_project(self, issue):
+        return issue.split('-', 1)[0].upper() in self.jira_projects
 
 
 def get_eds_tasks():
