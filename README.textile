@@ -9,13 +9,18 @@ Other:
 * @apt-get install python-appindicator@ (for xfce)
 * @apt-get install python-pip@
 * @pip install python-dateutil@
-* @pip install jira==0.33@ or use debian package (@jira-python@ at @ppa:sarnowskitomek/hamter-intergration@)
+* @pip install jira@ or use debian package (@jira-python@ at @ppa:sarnowskitomek/hamter-intergration@)
 
 h1. Installing
 
 *WARNING* It's preffered to uninstall other hamsters from system
 
 pre. ./waf configure build --prefix=/usr
+sudo ./waf install
+
+Sometimes you need to run:
+
+pre. sudo chown -R <user>:users /path/to/the/checkout
 sudo ./waf install
 
 After that make sure that the old daemons aren't roaming around:
