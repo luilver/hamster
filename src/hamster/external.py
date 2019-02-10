@@ -290,9 +290,9 @@ class ActivitiesSource(object):
             activity['category'] = str(getattr(issue.fields, self.jira_category))
         else:
             activity['category'] = ""
-        if not activity['category']:
+        if not activity['category'] or activity['category'] == "None":
             try:
-                activity['category'] = getattr(issue.fields, 'issuetype').name
+                activity['category'] = "%s/%s (%s)" % (getattr(issue.fields, 'project').key, getattr(issue.fields, 'issuetype').name, getattr(issue.fields, 'project').name)
             except Exception as e:
                 logger.warn(str(e))
         return activity
